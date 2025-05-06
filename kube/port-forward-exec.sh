@@ -6,9 +6,8 @@ set -euo pipefail
 
 die() {
     echo -e ERROR: "$@" >&2
-    exit 42
+    cleanup 42
 }
-
 cleanup() {
     local exit_status="$?"
     kill "$kubectl_pid"
@@ -22,13 +21,7 @@ kubectl_pid=$!
 echo kubectl port-forward "$1" "$2" >&2
 
 trap 'cleanup' ERR
-start_time="$(date +%s)"
-while ! nc -z localhost "$PORT"; do
-    if [ "$(($(date +%s) - start_time))" -ge 5 ]; then
-        die "timed out"
-    fi
-    sleep 0.1
-done
+timeout 5 sh -c "until nc -z localhost $2; do sleep 0.1; done" || die "timed out"
 shift 2
 "$@"
 cleanup
