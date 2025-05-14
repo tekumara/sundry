@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine
+spec:
+  containers:
+  - name: alpine
+    image: alpine:latest
+    # allow attach (which keeps container running)
+    stdin: true
+    # stdin is a tty
+    tty: true
+    resources:
+      requests:
+        cpu: "1000m"
