@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: proxy
+spec:
+  containers:
+    - name: socat
+      image: alpine/socat:latest
+      args:
+        - TCP-LISTEN:80,fork
+        - TCP:my-awesome-api.my.org:80
+      ports:
+        - containerPort: 80
+
+# Host header is needed for nginx ingress controller to route the request to the correct service.
+# port-forward-exec.sh proxy 8000:80 curl -H "Host: my-awesome-api.my.org" localhost:8000/
+

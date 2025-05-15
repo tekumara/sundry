@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: proxy
+spec:
+  containers:
+    - name: proxy
+      image: vimagick/tinyproxy:latest
+      ports:
+        - containerPort: 8888
+
